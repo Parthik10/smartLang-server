@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ERR-0001",
+    "timestamp": "2025-05-15T09:43:43.875182",
+    "original_text": "hi my name is ",
+    "incorrect_translation": "Hola mi nombre es",
+    "expected_translation": "hlo",
+    "notes": "no this is wrong",
+    "status": "pending"
+  }
+]

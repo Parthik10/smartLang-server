@@ -1,0 +1,47 @@
+# === Global ===
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+# === Python ===
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.env
+.venv
+.pytest_cache/
+.coverage
+htmlcov/
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Project specific ===
+# Cached model files
+compiler/models/
+data/cached_models/
+
+# Exclude any torch or model files accidentally committed
+*.pth
+*.pt
+*.onnx
+*.tflite
+*.pb
+*.ckpt
+
+# === OS-Specific ===
+*.bak
+
+# === Git ===
+*.orig
