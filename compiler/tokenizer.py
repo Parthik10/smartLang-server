@@ -9,6 +9,40 @@ class Tokenizer:
         with open(data_dir / "english_tokens.json", "r") as f:
             self.english_tokens = json.load(f)
             
+        # Add common greeting words
+        self.english_tokens["pronouns"].update({
+            "hi": "hi",
+            "hello": "hello",
+            "hey": "hey",
+            "how": "how",
+            "what": "what",
+            "when": "when",
+            "where": "where",
+            "why": "why",
+            "who": "who"
+        })
+        
+        # Add common name-related words
+        self.english_tokens["nouns"].update({
+            "name": "name",
+            "person": "person",
+            "people": "people",
+            "day": "day",
+            "time": "time",
+            "world": "world",
+            "life": "life",
+            "work": "work",
+            "home": "home",
+            "family": "family",
+            "love": "love",
+            "hate": "hate",
+            "hope": "hope",
+            "dream": "dream",
+            "future": "future",
+            "past": "past",
+            "present": "present"
+        })
+            
     def tokenize(self, input_text):
         """
         Break down the input English text into tokens.
@@ -23,7 +57,7 @@ class Tokenizer:
         cleaned_text = input_text.lower().strip()
         
         # Split into words and punctuation
-        # This simple regex splits on whitespace and keeps punctuation
+        # This regex splits on whitespace and keeps punctuation
         raw_tokens = re.findall(r'\b\w+\b|\S', cleaned_text)
         
         tokens = []
@@ -44,7 +78,13 @@ class Tokenizer:
             elif token in ".,;:?!":
                 token_type = "PUNCTUATION"
             else:
-                token_type = "UNKNOWN"
+                # If word is not in dictionary, try to guess its type
+                # This helps with names and unknown words
+                if token.isalpha():
+                    # If it's a word we don't know, assume it's a noun
+                    token_type = "NOUN"
+                else:
+                    token_type = "UNKNOWN"
                 
             tokens.append({
                 "value": token,

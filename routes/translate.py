@@ -4,7 +4,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.parser import Parser
 from compiler.generator import Generator
 from compiler.nmt_translator import NMTTranslator
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 router = APIRouter(
     prefix="/api",
@@ -28,7 +28,8 @@ class TranslationResponse(BaseModel):
     translation: Optional[str] = None
     success: bool
     error: Optional[str] = None
-    tokens: Optional[List[str]] = []
+    tokens: List[Dict[str, str]] = []  # List of token objects with type and value
+    parseTree: Optional[Dict[str, Any]] = None  # Parse tree structure
     model_used: str = "rule-based"  # Either "nmt" or "rule-based"
 
 @router.post("/translate", response_model=TranslationResponse)
@@ -37,6 +38,10 @@ async def translate(request: TranslationRequest):
     Translate English text to Spanish using a compiler-like approach or NMT
     """
     try:
+        # Always perform tokenization and parsing
+        tokens = tokenizer.tokenize(request.text)
+        parse_tree = parser.parse(tokens)
+        
         # If NMT is requested, try it first
         if request.use_nmt:
             nmt_result = nmt_translator.translate(request.text)
@@ -46,7 +51,8 @@ async def translate(request: TranslationRequest):
                     "original": request.text,
                     "translation": nmt_result["translation"],
                     "success": True,
-                    "tokens": [],
+                    "tokens": tokens,  # Already in the correct format from tokenizer
+                    "parseTree": parse_tree,
                     "model_used": "nmt"
                 }
             else:
@@ -54,13 +60,6 @@ async def translate(request: TranslationRequest):
                 print(f"NMT translation failed, falling back to rule-based: {nmt_result.get('error')}")
         
         # Rule-based approach (original compiler-like implementation)
-        # Step 1: Tokenization
-        tokens = tokenizer.tokenize(request.text)
-
-        # Step 2: Parsing
-        parse_tree = parser.parse(tokens)
-
-        # Step 3: Code generation (translation)
         result = generator.generate(parse_tree)
 
         if result["success"]:
@@ -68,7 +67,8 @@ async def translate(request: TranslationRequest):
                 "original": request.text,
                 "translation": result["translation"],
                 "success": True,
-                "tokens": result.get("tokens", []),
+                "tokens": tokens,  # Already in the correct format from tokenizer
+                "parseTree": parse_tree,
                 "model_used": "rule-based"
             }
         else:
@@ -78,7 +78,8 @@ async def translate(request: TranslationRequest):
                 "translation": "",
                 "success": False,
                 "error": result.get("error", "Not a valid translation"),
-                "tokens": [],
+                "tokens": tokens,  # Already in the correct format from tokenizer
+                "parseTree": parse_tree,
                 "model_used": "rule-based"
             }
 

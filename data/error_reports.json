@@ -7,5 +7,14 @@
     "expected_translation": "hlo",
     "notes": "no this is wrong",
     "status": "pending"
+  },
+  {
+    "id": "ERR-0002",
+    "timestamp": "2025-05-19T23:09:35.717053",
+    "original_text": "hi my name is parthik mangal\n",
+    "incorrect_translation": "Hola, mi nombre es Parthik Mangal.",
+    "expected_translation": "kjh",
+    "notes": "kjhhjk",
+    "status": "pending"
   }
 ]
