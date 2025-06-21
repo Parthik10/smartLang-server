@@ -5,7 +5,6 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 router = APIRouter(
-    prefix="/api",
     tags=["feedback"],
     responses={404: {"description": "Not found"}},
 )
