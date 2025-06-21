@@ -4,12 +4,7 @@ import os
 
 class NMTTranslator:
     def __init__(self, model_name="Helsinki-NLP/opus-mt-en-es"):
-        """
-        Initialize the Neural Machine Translation (NMT) model
-        
-        Args:
-            model_name (str): The Hugging Face model name to use
-        """
+       
         self.model_name = model_name
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         
